@@ -1,0 +1,16 @@
+- name: Create and provision jenkins.foo.com
+  hosts: digitalocean
+
+  vars:
+    - jenkins_droplet_id: "1234"
+
+  # pre_tasks:
+
+  #   - raw: apt-get update && apt-get install -y curl python3-apt python3-pexpect
+
+  tasks:
+
+    - include_vars: secrets.yml
+
+    - include: create-droplet.yml name='jenkins' domain='foo.com'
+
