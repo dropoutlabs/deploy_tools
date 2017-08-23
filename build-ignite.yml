@@ -30,9 +30,6 @@
 
     - name: fix Ignite permissions
       file: path=/home/src/apache-ignite-2.1.0-src owner={{ ansible_ssh_user }} state=directory recurse=yes
-      become: yes
-      become_method: sudo
-      become_user: root
 
     - debug: var=out.stdout_lines
 
