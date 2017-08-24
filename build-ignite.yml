@@ -1,13 +1,11 @@
 - name: Build Ignite from source
   hosts: all
 
-  become: true
-
   tasks:
 
-    - file:
-        path: /home/src
-        state: directory
+    - name: create /home/src on behalf of {{ ansible_user }}
+      file: path=/home/src state=directory owner={{ ansible_user }}
+      become: yes
 
     - name: get Ignite
       get_url:
@@ -27,9 +25,6 @@
       environment:
         JAVA_HOME: /usr/lib/jvm/java-8-oracle
       register: out
-
-    - name: fix Ignite permissions
-      file: path=/home/src/apache-ignite-2.1.0-src owner={{ ansible_ssh_user }} state=directory recurse=yes
 
     - debug: var=out.stdout_lines
 
