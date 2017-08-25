@@ -23,6 +23,8 @@
         - git
         - oracle-java8-installer
         - screen
+        - bash-completion
+        - vim
 
     - name: get Maven
       get_url:
