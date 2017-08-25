@@ -1,0 +1,9 @@
+---
+# file: group_vars/buildbots
+name: buildbot
+# XXX
+droplet_groups: buildbots
+
+# Local variables:
+# mode: YAML
+# End:

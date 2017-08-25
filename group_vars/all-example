@@ -1,0 +1,7 @@
+---
+# file: group_vars/all
+DO_API_TOKEN: 'put token'
+
+# Local variables:
+# mode: YAML
+# End:

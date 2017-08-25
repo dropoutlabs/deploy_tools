@@ -1,0 +1,11 @@
+---
+# file: buildbot.yml
+- name: Install buildbot 
+  # XXX
+  hosts: buildbots
+  become: yes
+
+  roles:
+    - droplet
+    - buildbot
+
