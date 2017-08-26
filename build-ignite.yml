@@ -19,20 +19,27 @@
       file: path=/home/ignite state=directory owner={{ user }}
 
     - name: get Ignite
+      become: yes
+      become_user: "{{ user }}"
       get_url:
         url: http://apache-mirror.rbc.ru/pub/apache//ignite/2.1.0/apache-ignite-2.1.0-src.zip
-        dest: /home/src
+        dest: /home/ignite
 
-    - unarchive:
-        src: /home/src/apache-ignite-2.1.0-src.zip
-        dest: /home/src
-        remote_src: yes
+    - name: unarchive Ignite
+      become: yes
+      become_user: "{{ user }}"
+      unarchive: >-
+        src=/home/ignite/apache-ignite-2.1.0-src.zip
+        dest=/home/ignite
+        remote_src=yes
 
     # XXX 
     - name: build Ignite
+      become: yes
+      become_user: "{{ user }}"
       command: /opt/apache-maven-3.5.0/bin/mvn clean package -DskipTests
       args:
-        chdir: /home/src/apache-ignite-2.1.0-src
+        chdir: /home/ignite/apache-ignite-2.1.0-src
       environment:
         JAVA_HOME: /usr/lib/jvm/java-8-oracle
       register: out
@@ -40,6 +47,8 @@
     - debug: var=out.stdout_lines
 
     - name: here
+      become: yes
+      become_user: root
       template:
         src: ./ignite.sh.j2
         dest: /etc/profile.d/ignite.sh
