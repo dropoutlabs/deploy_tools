@@ -1,0 +1,9 @@
+- shell: |
+    curl -sL https://deb.nodesource.com/setup_6.x | bash -
+  
+- apt:
+    name: nodejs
+    state: latest
+    update_cache: yes
+
+
