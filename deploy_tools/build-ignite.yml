@@ -1,0 +1,4 @@
+---
+- hosts: all
+  roles:
+    - { role: ignite, user: "{{ user }}", password: "{{ password }}" }
