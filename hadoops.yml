@@ -1,0 +1,10 @@
+- name: Get Hadoop (binary)
+  hosts: hadoops
+
+  become: true
+
+  roles:
+    - hadoop
+
+
+

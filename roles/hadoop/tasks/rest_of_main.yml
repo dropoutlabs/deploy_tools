@@ -1,0 +1,32 @@
+- shell: |
+    md5sum -c hadoop-2.8.1.tar.gz.md5 
+  args:
+    chdir: /tmp
+  register: md5sum
+  ignore_errors: yes
+
+- name: get Hadoop (424,6 MB)
+  command: axel http://www-us.apache.org/dist/hadoop/common/hadoop-2.8.1/hadoop-2.8.1.tar.gz
+  args:
+    chdir: /tmp
+  register: out
+  when: not md5sum.stdout  
+
+- debug: var=out.stdout_lines
+
+- template:
+    src: ./hadoop-2.8.1.tar.gz.md5.j2
+    dest: /tmp/hadoop-2.8.1.tar.gz.md5
+
+- unarchive:
+    src: /tmp/hadoop-2.8.1.tar.gz
+    dest: /usr/local/
+    remote_src: yes
+
+- command: creates="/usr/local/hadoop" mv /usr/local/hadoop-2.8.1 /usr/local/hadoop
+
+- name: here
+  template:
+    src: ./hadoop.sh.j2
+    dest: /etc/profile.d/hadoop.sh
+
