@@ -3,9 +3,20 @@
 
   tasks:
 
-    - name: create /home/src on behalf of {{ ansible_user }}
-      file: path=/home/src state=directory owner={{ ansible_user }}
+    - name: add Ignite group
       become: yes
+      become_user: root
+      group: name=ignite state=present
+
+    - name: add Ignite user
+      become: yes
+      become_user: root
+      user: name={{ user }} password={{ password }} comment="Ignite user" group=ignite home=/home/ignite
+
+    - name: create /home/ignite on behalf of {{ user }}
+      become: yes
+      become_user: root
+      file: path=/home/ignite state=directory owner={{ user }}
 
     - name: get Ignite
       get_url:
