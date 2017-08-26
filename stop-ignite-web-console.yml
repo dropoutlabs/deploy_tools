@@ -1,0 +1,12 @@
+- name: Stop Ignite Web Console
+  hosts: ignite
+
+  become: true
+
+  tasks:
+
+    - include_vars: ignite-vars.yml
+
+    - shell: |
+        screen -S ignite -X quit
+

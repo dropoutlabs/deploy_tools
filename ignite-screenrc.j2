@@ -1,0 +1,6 @@
+screen -t 'Ignite Web Console backend'
+select 0
+stuff "cd {{IGNITE_HOME}}/modules/web-console/backend; npm start\r"
+screen -t 'Ignite Web Console frontend'
+select 1
+stuff "cd {{IGNITE_HOME}}/modules/web-console/frontend; npm run dev\r"

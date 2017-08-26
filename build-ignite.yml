@@ -1,0 +1,39 @@
+- name: Build Ignite from source
+  hosts: all
+
+  become: true
+
+  tasks:
+
+    - file:
+        path: /home/src
+        state: directory
+
+    - name: get Ignite
+      get_url:
+        url: http://apache-mirror.rbc.ru/pub/apache//ignite/2.1.0/apache-ignite-2.1.0-src.zip
+        dest: /home/src
+
+    - unarchive:
+        src: /home/src/apache-ignite-2.1.0-src.zip
+        dest: /home/src
+        remote_src: yes
+
+    # XXX 
+    - name: build Ignite
+      command: /opt/apache-maven-3.5.0/bin/mvn clean package -DskipTests
+      args:
+        chdir: /home/src/apache-ignite-2.1.0-src
+      environment:
+        JAVA_HOME: /usr/lib/jvm/java-8-oracle
+      register: out
+
+    - name: fix Ignite permissions
+      file: path=/home/src/apache-ignite-2.1.0-src owner={{ ansible_ssh_user }} state=directory recurse=yes
+
+    - debug: var=out.stdout_lines
+
+    - name: here
+      template:
+        src: ./ignite.sh.j2
+        dest: /etc/profile.d/ignite.sh
