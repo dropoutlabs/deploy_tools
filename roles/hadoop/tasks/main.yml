@@ -1,0 +1,10 @@
+- apt: name=axel state=present
+
+- shell: |
+    ls /usr/local/hadoop/
+  register: ls
+  ignore_errors: yes
+
+- include: rest_of_main.yml
+  when: not ls.stdout
+
