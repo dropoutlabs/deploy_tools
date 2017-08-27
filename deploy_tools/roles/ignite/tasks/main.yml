@@ -4,6 +4,7 @@
     become: yes
     become_user: root
     group: name=ignite state=present
+    tags: configuration
 
   - name: add Ignite user
     become: yes
@@ -14,11 +15,14 @@
       comment="Ignite user"
       group=ignite
       home=/home/ignite
+    tags: configuration
 
   - name: create /home/ignite on behalf of {{ user }}
     become: yes
     become_user: root
     file: path=/home/ignite state=directory owner={{ user }}
+    tags: configuration
+
 
   - name: get Ignite
     become: yes
@@ -26,6 +30,7 @@
     get_url:
       url: http://apache-mirror.rbc.ru/pub/apache//ignite/2.1.0/apache-ignite-2.1.0-src.zip
       dest: /home/ignite
+    tags: fetch
 
   - name: unarchive Ignite
     become: yes
@@ -34,6 +39,7 @@
       src=/home/ignite/apache-ignite-2.1.0-src.zip
       dest=/home/ignite
       remote_src=yes
+    tags: fetch
 
 
   - name: build Ignite
@@ -45,6 +51,7 @@
     environment:
       JAVA_HOME: /usr/lib/jvm/java-8-oracle
     register: out
+    tags: build
 
   - debug: var=out.stdout_lines
 
@@ -54,3 +61,4 @@
     template:
       src: ignite.sh.j2
       dest: /etc/profile.d/ignite.sh
+    tags: post-build
