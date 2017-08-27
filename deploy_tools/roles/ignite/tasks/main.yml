@@ -8,7 +8,12 @@
   - name: add Ignite user
     become: yes
     become_user: root
-    user: name={{ user }} password={{ password }} comment="Ignite user" group=ignite home=/home/ignite
+    user: >-
+      name={{ user }}
+      password={{ password |password_hash('sha512') }}
+      comment="Ignite user"
+      group=ignite
+      home=/home/ignite
 
   - name: create /home/ignite on behalf of {{ user }}
     become: yes
