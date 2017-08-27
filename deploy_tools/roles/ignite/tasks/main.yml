@@ -47,5 +47,5 @@
     become: yes
     become_user: root
     template:
-      src: ./ignite.sh.j2
+      src: ignite.sh.j2
       dest: /etc/profile.d/ignite.sh
