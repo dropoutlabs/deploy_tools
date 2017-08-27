@@ -1,44 +1,43 @@
 ---
 # Tasks to build Ignite from source
-  - name: add Ignite group
-    become: yes
-    become_user: root
-    group: name=ignite state=present
+  - block:
+    - name: add Ignite group
+      become: yes
+      become_user: root
+      group: name=ignite state=present
+
+    - name: add Ignite user
+      become: yes
+      become_user: root
+      user: >-
+        name={{ user }}
+        password={{ password |password_hash('sha512') }}
+        comment="Ignite user"
+        group=ignite
+        home=/home/ignite
+
+    - name: create /home/ignite on behalf of {{ user }}
+      become: yes
+      become_user: root
+      file: path=/home/ignite state=directory owner={{ user }}
     tags: configuration
 
-  - name: add Ignite user
-    become: yes
-    become_user: root
-    user: >-
-      name={{ user }}
-      password={{ password |password_hash('sha512') }}
-      comment="Ignite user"
-      group=ignite
-      home=/home/ignite
-    tags: configuration
 
-  - name: create /home/ignite on behalf of {{ user }}
-    become: yes
-    become_user: root
-    file: path=/home/ignite state=directory owner={{ user }}
-    tags: configuration
+  - block:
+    - name: get Ignite
+      become: yes
+      become_user: "{{ user }}"
+      get_url:
+        url: http://apache-mirror.rbc.ru/pub/apache//ignite/2.1.0/apache-ignite-2.1.0-src.zip
+        dest: /home/ignite
 
-
-  - name: get Ignite
-    become: yes
-    become_user: "{{ user }}"
-    get_url:
-      url: http://apache-mirror.rbc.ru/pub/apache//ignite/2.1.0/apache-ignite-2.1.0-src.zip
-      dest: /home/ignite
-    tags: fetch
-
-  - name: unarchive Ignite
-    become: yes
-    become_user: "{{ user }}"
-    unarchive: >-
-      src=/home/ignite/apache-ignite-2.1.0-src.zip
-      dest=/home/ignite
-      remote_src=yes
+    - name: unarchive Ignite
+      become: yes
+      become_user: "{{ user }}"
+      unarchive: >-
+        src=/home/ignite/apache-ignite-2.1.0-src.zip
+        dest=/home/ignite
+        remote_src=yes
     tags: fetch
 
 
