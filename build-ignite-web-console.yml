@@ -1,0 +1,44 @@
+- name: Build and Deploy Ignite Web Console
+  hosts: ignite
+
+  vars:
+    IGNITE_HOME: "/home/src/apache-ignite-2.1.0-src"
+
+  become: true
+
+  pre_tasks:
+
+    - raw: apt-get update && apt-get install -y python3-apt software-properties-common
+
+  tasks:
+
+    - name: make sure required packages are installed
+      apt:
+        name: "{{item}}"
+        state: latest
+        update_cache: yes
+      with_items:
+        - mongodb
+
+    # - name: 
+    #   npm:
+    #     path: "{{ IGNITE_HOME }}/modules/web-console/backend"
+
+    - shell: |
+        npm install --no-optional
+      args:
+        chdir: "{{ IGNITE_HOME }}/modules/web-console/backend"
+      register: out
+
+    - debug: var=out.stdout_lines
+
+    - shell: |
+        npm install --no-optional
+      args:
+        chdir: "{{ IGNITE_HOME }}/modules/web-console/frontend"
+      register: out
+
+    - debug: var=out.stdout_lines
+
+  roles:
+    - nodejs

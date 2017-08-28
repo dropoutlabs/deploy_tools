@@ -1,0 +1,41 @@
+- name: play at the top level
+  hosts: all
+
+  pre_tasks:
+
+    - raw: apt-get update && apt-get install -y unzip curl python3-apt software-properties-common
+
+  tasks:
+
+    - apt_repository:
+        repo: 'ppa:webupd8team/java'
+
+    - shell: |
+        bash -c "debconf-set-selections <<< 'debconf shared/accepted-oracle-license-v1-1 select true'"
+        bash -c "debconf-set-selections <<< 'debconf shared/accepted-oracle-license-v1-1 seen true'"
+
+    - name: make sure required packages are installed
+      apt:
+        name: "{{item}}"
+        state: latest
+        update_cache: yes
+      with_items:
+        - git
+        - oracle-java8-installer
+        - screen
+        - bash-completion
+        - vim
+
+    - name: get Maven
+      get_url:
+        url: http://apache-mirror.rbc.ru/pub/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
+        dest: /tmp/apache-maven-3.5.0-bin.tar.gz
+
+    - unarchive:
+        src: /tmp/apache-maven-3.5.0-bin.tar.gz
+        dest: /opt
+        remote_src: yes
+
+    - template:
+        src: ./environment.j2
+        dest: /etc/environment

@@ -1,0 +1,16 @@
+- name: Run Ignite Web Console
+  hosts: ignite
+
+  become: true
+
+  tasks:
+
+    - include_vars: ignite-vars.yml
+
+    - template:
+        src: ./ignite-screenrc.j2
+        dest: /tmp/ignite-screenrc
+
+    - shell: |
+        screen -d -m -S ignite -c /tmp/ignite-screenrc
+
