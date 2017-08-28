@@ -39,6 +39,7 @@
 
 - local_action:
     module: blockinfile
+    create: yes
     path: "{{ playbook_dir }}/digitalocean"
     marker: "# {mark} {{ name }}"
     content: |
