@@ -37,14 +37,16 @@
     wait_timeout: 500
   register: droplet
 
+# ??? write to inventory
 - local_action:
     module: blockinfile
     create: yes
+    mode: 0666
     path: "{{ playbook_dir }}/digitalocean"
     marker: "# {mark} {{ name }}"
     content: |
       [{{ droplet_groups }}]
-      {{ name }} ansible_host={{ droplet.droplet.ip_address }} droplet_id={{ droplet.droplet.id }}
+      {{ name }} ansible_host={{ droplet.droplet.ip_address }} droplet_id={{ droplet.droplet.id }} ansible_ssh_user=root ansible_ssh_private_key_file={{ '~/.ssh/id_rsa' | expanduser }} ansible_python_interpreter=/usr/bin/python3
 
 - debug:
     msg: "IP is {{ droplet.droplet.ip_address }}"
@@ -54,7 +56,7 @@
     hostname: "{{ droplet.droplet.ip_address }}"
     groups: "{{ droplet_groups }}"
     ansible_ssh_user: root
-    ansible_ssh_private_key: "{{ lookup('file', '~/.ssh/id_rsa') }}"
+    ansible_ssh_private_key_file: "{{ '~/.ssh/id_rsa' | expanduser }}"
     ansible_host: "{{ droplet.droplet.ip_address }}"
     ansible_ssh_host: "{{ droplet.droplet.ip_address }}"
     ansible_python_interpreter: python3

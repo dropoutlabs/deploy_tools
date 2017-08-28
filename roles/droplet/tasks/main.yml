@@ -1,6 +1,10 @@
 ---
 - shell: |
-    grep -oP '^{{ name }}.*droplet_id=\K(.*)$' {{ playbook_dir }}/digitalocean
+    GREP=grep
+    if [ `uname` == 'Darwin' ]; then
+        GREP=ggrep
+    fi
+    $GREP -oP '^{{ name }}.*droplet_id=\K(.*)$' {{ playbook_dir }}/digitalocean
   register: grep
   ignore_errors: yes
 

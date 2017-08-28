@@ -1,5 +1,7 @@
 # deploy_tools
 
+On OS X do `brew install grep` first
+
 How to publish open source changes to GitHub
 
 merge (some?) changes
