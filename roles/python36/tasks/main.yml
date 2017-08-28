@@ -32,25 +32,3 @@
   with_items:
     - virtualenvwrapper
 
-- file:
-    path: /home/venvs
-    state: directory
-
-- file:
-    path: /home/ysz/src
-    state: directory
-
-- blockinfile:
-    path: /home/vagrant/.bashrc
-    block: |
-      export WORKON_HOME=/home/venvs
-      export PROJECT_HOME=/home/ysz/src
-      export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.6
-      source /usr/local/bin/virtualenvwrapper.sh      
-
-- name: here
-  file:
-    path: /home/venvs
-    owner: vagrant
-    group: vagrant
-    recurse: true

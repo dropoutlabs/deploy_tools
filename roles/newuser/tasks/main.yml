@@ -1,0 +1,36 @@
+- file:
+    path: /home/venvs
+    state: directory
+
+- group:
+    name: wheel
+    state: present
+
+- lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+
+- name: here
+  user: name="{{ newuser }}" group=wheel shell=/bin/bash generate_ssh_key=yes
+
+- file:
+    path: "/home/{{ newuser }}/src"
+    state: directory
+
+- blockinfile:
+    path: "/home/{{ newuser }}/.bashrc"
+    block: |
+      export WORKON_HOME=/home/venvs
+      export PROJECT_HOME=/home/ysz/src
+      export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.6
+      source /usr/local/bin/virtualenvwrapper.sh      
+
+- file:
+    path: /home/venvs
+    owner: "{{ newuser }}"
+    recurse: true
+
+- copy: src="{{ sshkey }}" dest="/home/{{ newuser }}/.ssh/authorized_keys2" owner="{{ newuser }}" mode="u+rw,g=,o="
+
