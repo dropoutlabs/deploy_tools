@@ -47,6 +47,9 @@
     template:
       src: default-config.xml.j2
       dest: "{{ ignite_home }}/config/default-config.xml"
+    template:
+      src: core-site.xml.j2
+      dest: "{{ ansible_env.HADOOP_HOME }}/etc/hadoop"
     tags: igfs
 
   - name: configure Ignite MapReduce job tracker
