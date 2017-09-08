@@ -42,6 +42,11 @@
     tags: install
 
   - name: configure Ignite file system
+    become: yes
+    become_user: root
+    template:
+      src: default-config.xml.j2
+      dest: "{{ ignite_home }}/config/default-config.xml"
     tags: igfs
 
   - name: configure Ignite MapReduce job tracker
