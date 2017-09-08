@@ -1,56 +1,56 @@
 ---
-  - name: get lastest axel
-    become: yes
-    apt: >-
-      name=axel
-      state=latest
-      update_cache=yes
+- name: get lastest axel
+  become: yes
+  apt: >-
+    name=axel
+    state=latest
+    update_cache=yes
 
 # Tasks to install Apache Ignite Hadoop Accelerator 2.1.0
-  - name: get Ignite Hadoop Accelerator 2.1.0
-    become: yes
-    become_user: "{{ user }}"
-    command: axel http://apache-mirror.rbc.ru/pub/apache//ignite/2.1.0/apache-ignite-hadoop-2.1.0-bin.zip
-    args:
-      chdir: /tmp
-    register: out
-    tags: fetch
+- name: get Ignite Hadoop Accelerator 2.1.0
+  become: yes
+  become_user: "{{ user }}"
+  command: axel http://apache-mirror.rbc.ru/pub/apache//ignite/2.1.0/apache-ignite-hadoop-2.1.0-bin.zip
+  args:
+    chdir: /tmp
+  register: out
+  tags: fetch
 
-  - debug: var=out.stdout_lines
+- debug: var=out.stdout_lines
 
 
-  - template:
-      src: apache-ignite-hadoop-2.1.0-bin.zip.sha1.j2
-      dest: /tmp/apache-ignite-hadoop-2.1.0-bin.zip.sha1
+- template:
+    src: apache-ignite-hadoop-2.1.0-bin.zip.sha1.j2
+    dest: /tmp/apache-ignite-hadoop-2.1.0-bin.zip.sha1
 
-  - name: check sha1
-    become: yes
-    become_user: "{{ user }}"
-    shell: sha1sum -c apache-ignite-hadoop-2.1.0-bin.zip.sha1
-    args:
-      chdir: /tmp
-    tags: check
+- name: check sha1
+  become: yes
+  become_user: "{{ user }}"
+  shell: sha1sum -c apache-ignite-hadoop-2.1.0-bin.zip.sha1
+  args:
+    chdir: /tmp
+  tags: check
 
-  - set_fact: ignite_home="{{ ansible_env.IGNITE_HOME|default('/usr/local/apache-ignite-hadoop-2.1.0/') }}"
-  - name: install Ignite Hadoop Accelerator 2.1.0
-    become: yes
-    become_user: root
-    unarchive: >-
-      src=/tmp/apache-ignite-hadoop-2.1.0-bin.zip
-      dest="{{ ignite_home }}/libs"
-      remote_src=yes
-    tags: install
+- set_fact: ignite_home="{{ ansible_env.IGNITE_HOME|default('/usr/local/apache-ignite-hadoop-2.1.0/') }}"
+- name: install Ignite Hadoop Accelerator 2.1.0
+  become: yes
+  become_user: root
+  unarchive: >-
+    src=/tmp/apache-ignite-hadoop-2.1.0-bin.zip
+    dest="{{ ignite_home }}/libs"
+    remote_src=yes
+  tags: install
 
-  - name: configure Ignite file system
-    become: yes
-    become_user: root
-    template:
-      src: default-config.xml.j2
-      dest: "{{ ignite_home }}/config/default-config.xml"
-    template:
-      src: core-site.xml.j2
-      dest: "{{ ansible_env.HADOOP_HOME }}/etc/hadoop"
-    tags: igfs
+- name: configure Ignite file system
+  become: yes
+  become_user: root
+  template:
+    src: default-config.xml.j2
+    dest: "{{ ignite_home }}/config/default-config.xml"
+  template:
+    src: core-site.xml.j2
+    dest: "{{ ansible_env.HADOOP_HOME }}/etc/hadoop"
+  tags: igfs
 
-  - name: configure Ignite MapReduce job tracker
-    tags: mapred
+- name: configure Ignite MapReduce job tracker
+  tags: mapred
