@@ -60,5 +60,4 @@
   template:
     src: ignite.sh.j2
     dest: /etc/profile.d/ignite.sh
-  file: path=/usr/local/apache-ignite-hadoop-2.1.0-bin/ state=directory owner={{ user }}
   tags: post-build
